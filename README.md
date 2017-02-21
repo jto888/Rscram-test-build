@@ -1,30 +1,26 @@
 Rscram-test-build
 =================
 
-Attempted build of SCRAM sources using Rtools  on Windows and Rcpp
+Attempted build of SCRAM sources using Rtools on Windows and Rcpp
 
- 
+It is known that Olzhas is demonstrating “Modern C++” and this test build is
+critical to close integration of the FaultTree package on R with SCRAM.
 
 The current attempt to build one of the most basic components of SCRAM as
-element.cc has failed.
-
-It is known that Olzhas is demonstrating “Modern C++” and it is likely that
-current limitation to C++11 with boost headers added (via LinkingTo: BH) on
-Windows is not sufficient.
+element.cc **has been successful!**
 
 Rtools support for C++11 consists of separate 32- and 64-bit builds of gcc 4.9.3
-and mingw-w64 v3 compiled by Jeroen Ooms and others.
+and mingw-w64 v3 compiled by Jeroen Ooms and others. However it has been found
+that during installation of Rtools an option to set the PATH environment sets
+the path to Rtools\gcc-4.6.3\bin. What is needed is for this early PATH setting
+to be Rtools\mingw\_32\bin in order to enable (i386 and x64) multiarch build.
 
  
 
-Further reference for requirements for such a build is contained in the
-following links:
+[Setting the path to Rtools\\mingw_64\\bin only works with a --no-multiarch
+argument in the R INSTALL command.]
 
-http://gallery.rcpp.org/articles/Rcpp-and-C++11-C++14-C++17/
-
-https://support.rstudio.com/hc/en-us/articles/200486088-Using-Rcpp-with-RStudio
-
- 
-
-It may well be that C++14 support expected with R version 3.4.0 perhaps in April
-2017 will be needed to complete this build.
+It is still mystifying that the build command is for g++  -std=c++0x . . .
+although I have provided CXX_STD = CXX11 in a Makevars.win file AND I have
+indicated SystemRequirements: C++11 in the DESCRIPTION file. However, all seems
+well.

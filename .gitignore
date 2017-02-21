@@ -1,0 +1,5 @@
+/cmd.exe
+/*.zip
+/Rscram.Rcheck/*
+/Rscram/src-i386/*
+/Rscram/src-x64/*
