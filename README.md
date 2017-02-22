@@ -13,7 +13,8 @@ Rtools support for C++11 consists of separate 32- and 64-bit builds of gcc 4.9.3
 and mingw-w64 v3 compiled by Jeroen Ooms and others. However it has been found
 that during installation of Rtools an option to set the PATH environment sets
 the path to Rtools\gcc-4.6.3\bin. What is needed is for this early PATH setting
-to be Rtools\mingw\_32\bin in order to enable (i386 and x64) multiarch build.
+to be Rtools\mingw\_32\bin in order to enable (i386 and x64) multiarch build
+using gcc 4.9.3.
 
  
 
