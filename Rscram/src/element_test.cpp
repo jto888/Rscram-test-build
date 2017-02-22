@@ -12,6 +12,20 @@ Rcpp::StringVector typstring="float";
  my_attr.value = as<std::string>(arg2);
  my_attr.type = as<std::string>(typstring[0]);
  
+ 
+ /*
+ //What I really want to do here is construct an Element object
+Element my_element=Element(as<std::string>(arg1);
+
+// add my_attr to the new Element object
+my_element.AddAttribute(my_attr);
+
+// then return the result of HasAttribute to R
+return wrap(my_element.HasAttribute(my_attr.name));
+
+//However I am certain there is something I don't know about Element construction.
+ */
+ 
   Attribute z_attr=my_attr;
  
 // z_attr=my_attr;
@@ -21,24 +35,5 @@ return List::create(
 	Named("value")=wrap(z_attr.value),		
 	Named("type")=wrap(z_attr.type)
 	);	
-/*
-// namespace specification not required if "using namespace..." declarations are made
-// but it must be assured there are no naming conflicts.
-
- scram::mef::Attribute my_attr;
-
- my_attr.name = Rcpp::as<std::string>(arg1);
- my_attr.value = Rcpp::as<std::string>(arg2);
- my_attr.type = Rcpp::as<std::string>(arg3);
- 
-  scram::mef::Attribute z_attr;
- 
- z_attr=my_attr;
-
-return List::create(		
-	Rcpp::Named("name")=wrap(z_attr.name),	
-	Rcpp::Named("value")=wrap(z_attr.value),		
-	Rcpp::Named("type")=wrap(z_attr.type)
-	);	
-*/	
+	
 }
