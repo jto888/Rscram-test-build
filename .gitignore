@@ -1,4 +1,4 @@
-/cmd.exe
+/Console.exe.lnk
 /*.zip
 /Rscram.Rcheck/*
 /Rscram/src-i386/*
@@ -21,6 +21,7 @@
 *.exe
 *.out
 *.app
+#*.bat
 
 # Other compiler output
 *.rds
