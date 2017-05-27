@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2016 Olzhas Rakhimov
+ * Copyright (C) 2014-2017 Olzhas Rakhimov
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -52,11 +52,10 @@ class Element {
   /// described in the MEF documentation and additions.
   ///
   /// @param[in] name  The local identifier name.
-  /// @param[in] optional_name  Allow empty names.
   ///
   /// @throws LogicError  The name is required and empty.
   /// @throws InvalidArgument  The name is malformed.
-  explicit Element(std::string name, bool optional_name = false);
+  explicit Element(std::string name);
 
   /// @returns The original name.
   const std::string& name() const { return kName_; }
@@ -170,20 +169,29 @@ std::string GetFullPath(const T& element) {
 }
 
 /// Mixin class for assigning unique identifiers to elements.
-class Id {
+class Id : public Element, public Role {
  public:
-  /// Mangles the element name to be unique.
+  /// @copydoc Element::Element
+  /// @copydoc Role::Role
+  ///
+  /// Mangles the element name into a unique id.
   /// Private elements get their full path as their ids,
   /// while public elements retain their name as ids.
-  ///
-  /// @param[in] el  The owner of the id.
-  /// @param[in] role  The role of the element.
-  ///
-  /// @throws LogicError  The name mangling strings are empty.
-  Id(const Element& el, const Role& role);
+  explicit Id(std::string name, std::string base_path = "",
+              RoleSpecifier role = RoleSpecifier::kPublic);
 
   /// @returns The unique id that is set upon the construction of this element.
   const std::string& id() const { return kId_; }
+
+  /// Produces unique name for the model element within the same type.
+  /// @{
+  static const std::string& unique_name(const Element& element) {
+    return element.name();
+  }
+  static const std::string& unique_name(const Id& element) {
+    return element.id();
+  }
+  /// @}
 
  protected:
   ~Id() = default;
@@ -200,6 +208,26 @@ using IdTable = boost::multi_index_container<
     T,
     boost::multi_index::indexed_by<boost::multi_index::hashed_unique<
         boost::multi_index::const_mem_fun<Id, const std::string&, &Id::id>>>>;
+
+/// Adds a unique element into a table,
+/// ensuring no duplicated entries.
+///
+/// @tparam ErrorType  The error type to indicate the insertion of a duplicate.
+/// @tparam T  A pointer type of the element supporting Element API.
+/// @tparam Table  A set container supporting standard insert API.
+///
+/// @param[in] element  The pointer to the unique element.
+/// @param[in,out] table  The destination set container.
+/// @param[in] header  The error message header appearing before duplicate name.
+///
+/// @throws ErrorType  The element is already in the table.
+template <class ErrorType, class T, class Table>
+void AddElement(T&& element, Table* table, const char* header) {
+  const std::string& name = element->name();  // The element pointer may move!
+  if (table->insert(std::forward<T>(element)).second == false) {
+    throw ErrorType(header + name);
+  }
+}
 
 /// Mixin class for providing marks for graph nodes.
 class NodeMark {
@@ -224,6 +252,22 @@ class NodeMark {
 
  private:
   Mark mark_ = kClear;  ///< The mark for traversal or toposort.
+};
+
+/// Mixin class for providing usage marks for elements.
+class Usage {
+ public:
+  /// @returns true if the element is used in the model or analysis.
+  bool usage() const { return usage_; }
+
+  /// @param[in] usage  The usage state of the element in a model.
+  void usage(bool usage) { usage_ = usage; }
+
+ protected:
+  ~Usage() = default;
+
+ private:
+  bool usage_ = false;  ///< Elements are assumed to be unused at construction.
 };
 
 }  // namespace mef
