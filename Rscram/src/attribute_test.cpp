@@ -4,6 +4,7 @@
 #include "expression.h"
 #include "expression/constant.h"
 #include "expression/boolean.h"
+#include "expression/numerical.h"
 
 using namespace Rcpp;
 using namespace scram::mef;
