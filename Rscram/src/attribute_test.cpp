@@ -1,5 +1,6 @@
 #include "Rscram.h"
 #include "element.h"
+#include "expression/constant.h"
 
 using namespace Rcpp;
 using namespace scram::mef;
