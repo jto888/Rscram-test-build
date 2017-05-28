@@ -1,7 +1,9 @@
 #include "Rscram.h"
 #include "element.h"
+
 #include "expression.h"
 #include "expression/constant.h"
+#include "expression/boolean.h"
 
 using namespace Rcpp;
 using namespace scram::mef;

@@ -24,6 +24,9 @@
 //#include "src/expression.h"
 #include "../expression.h"
 
+// from constant.cc
+#include <boost/math/constants/constants.hpp>
+
 namespace scram {
 namespace mef {
 
