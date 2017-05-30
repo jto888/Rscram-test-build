@@ -1,11 +1,13 @@
 #include "Rscram.h"
 #include "element.h"
 
-// these includes were used to drive test build of header only expression sources
-//#include "expression.h"
-//#include "expression/constant.h"
-//#include "expression/boolean.h"
-//#include "expression/numerical.h"
+// these includes are used to drive test build of header only expression sources
+#include "expression.h"
+#include "expression/boolean.h"
+#include "expression/conditional.h"
+#include "expression/constant.h"
+
+#include "expression/numerical.h"
 
 using namespace Rcpp;
 using namespace scram::mef;
