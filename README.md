@@ -21,20 +21,18 @@ using gcc 4.9.3. [In all cases Rtools\\bin must be first in the PATH].
 [Setting the path to Rtools\\mingw_64\\bin only works with a --no-multiarch
 argument in the R INSTALL command.]
 
-It is still mystifying that the build command is for g++ -std=c++0x . . .
-although I have provided CXX_STD = CXX11 in a Makevars.win file AND I have
-indicated SystemRequirements: C++11 in the DESCRIPTION file. However, the C++11
-standard is being applied.
+A package can define the C++ standard most effectively using SystemRequirements
+in the DESCRIPTION file.
 
  
 
 Next attempts to build through event.cc has been found to require ccfgroup.cc
 (the call for \#include “ccfgroup.h” is in the event.cc NOT the event.h, which
 was a little deceiving). Also, in ccfgroup.cc there are includes for
-"expression/arithmetic.h" and "expression/constant.h" so the expression folder
-is now required in src.  Within these expression headers lies an \#include back
-to “src/expression.h”; however, this cannot be found during the R build. Edits
-within these files now call for \#include “../expression.h” to make this work.
+"expression/numerical.h" and "expression/constant.h" so the expression folder is
+now required in src. Within these expression headers lies an \#include back to
+“src/expression.h”; however, this cannot be found during the R build. Edits
+within these files now call for #include “../expression.h” to make this work.
 
  
 
@@ -45,5 +43,21 @@ however, Rtools 3.4 (not yet frozen) does not include support for C++14.
 
 At this point test build development for Rscram will have to proceed on Ubuntu
 Linux and the Windows test build must be suspended.
+
+ 
+
+The .cc source files in the expression folder will not compile without
+directives exampled in package RSiena that may take some trial and error yet.
+
+https://stackoverflow.com/questions/39485359/in-rcpp-based-package-howto-write-makevars-in-project-with-subdirectories-in-src
+
+The best solution appears to be to leave the headers in the expression folder,
+but move the source files (\*.cc) into the main src folder. This results in some
+modest edits to \#include directives in these files that could be built into a
+script. In the source files that have been moved to src reference to their own
+headers must now be to the expression folder. Any reference to src needs to be
+altered to drop directory. In the header files left in the expression folder
+reference to “src/ files needs to be altered to “../ for the R build system to
+understand.
 
  
