@@ -32,7 +32,7 @@ was a little deceiving). Also, in ccfgroup.cc there are includes for
 "expression/numerical.h" and "expression/constant.h" so the expression folder is
 now required in src. Within these expression headers lies an \#include back to
 “src/expression.h”; however, this cannot be found during the R build. Edits
-within these files now call for #include “../expression.h” to make this work.
+within these files now call for \#include “../expression.h” to make this work.
 
  
 
@@ -60,4 +60,27 @@ altered to drop directory. In the header files left in the expression folder
 reference to “src/ files needs to be altered to “../ for the R build system to
 understand.
 
- 
+After some success with the builds incrementally through faulttree.cc and
+paramater.cc I decided to go for the remaining src (excluding scram.cc, to be
+rewritten as scram.cpp without a main function) at once.
+
+The following issues were found:
+
+1) bdd.cc calls for boost/multiprecision/miller_rabin.hpp which was not in the
+BH package. Inserting this header file into the local library for BH enabled the
+compile to complete. This is not acceptable for a package build, so an issue has
+been raised on https://github.com/eddelbuettel/bh
+
+2) libxml++ library is required for config.cc, initializer.cc, version.cc.in and
+reporter.cc. Removing these files with headers results in a successful build.
+
+I had some thought to building a complete scram inside of R and allowing all the
+file read/write activity to take place, since loading model data into required
+objects seems over my head. However, utilizing initializer and reporter would
+entail system requirements for libxml++, libxml2, and
+[glibmm-2.4](http://www.gtkmm.org/) (or a subset of it containing at least
+Glib::ustring). This is more extensive than simply requiring a binary
+installation of SCRAM. So this will not be happening.
+
+Must now go back to considering the better solution of instantiating model
+objects on my own and recovering analysis output directly.
