@@ -66,13 +66,14 @@ rewritten as scram.cpp without a main function) at once.
 
 The following issues were found:
 
-1) bdd.cc calls for boost/multiprecision/miller_rabin.hpp which was not in the
-BH package. Inserting this header file into the local library for BH enabled the
-compile to complete. This is not acceptable for a package build, so an issue has
-been raised on https://github.com/eddelbuettel/bh
+1.  bdd.cc calls for boost/multiprecision/miller_rabin.hpp which was not in the
+    BH package. Inserting this header file into the local library for BH enabled
+    the compile to complete. This is not acceptable for a package build, so an
+    issue has been raised on https://github.com/eddelbuettel/bh
 
-2) libxml++ library is required for config.cc, initializer.cc, version.cc.in and
-reporter.cc. Removing these files with headers results in a successful build.
+2.  libxml++ library is required for config.cc, initializer.cc, version.cc.in
+    and reporter.cc. Removing these files with headers results in a successful
+    build.
 
 I had some thought to building a complete scram inside of R and allowing all the
 file read/write activity to take place, since loading model data into required
@@ -84,3 +85,31 @@ installation of SCRAM. So this will not be happening.
 
 Must now go back to considering the better solution of instantiating model
 objects on my own and recovering analysis output directly.
+
+ 
+
+### Facade and Scaffold
+
+Having proven successful build of the scram core, development is now focused on
+an R facade and scaffold to cpp. The scaffold is  accomplished by passing the
+appropriate contents of an R ftree object to the C++ environment where scram
+objects can be instantiated and analysis performed. An initial scaffold test is
+executed using an R facade function named test.scaffold. This  transfers of a
+table of data from R to C++ arrays, and proves accomplishment by returning a
+view crafted in the C++ environment.
+
+The next step has been to prove the interpretation of the fault tree data in C++
+to define the model structure of the fault tree. Key to this interpretation is a
+“find” function to identify unique gates and child nodes of each gate. In order
+to accomplish this with limited C++ knowledge was to utilize the Armadillo C++
+library for use of its find method for its container types. A function
+test.gates proves this interpretation by returning the results of each gate
+determined by a loop making multiple calls to a gate_test function in cpp.
+
+Next steps are to instantiate model and fault-tree objects in scram and return
+proof of that construction back to R.
+
+Similarly to gates the attributes of each basic-event element must be
+interpreted and ultimately instantiated in scram objects.
+
+ 
