@@ -1,7 +1,7 @@
 ## ftree2cpp
 ## initial demonstration of scaffolding from FaultTree on R to SCRAM core
 ##
-ftree2cpp<-function(DF) {
+ftree2cpp<-function(DF, DFname="") {
   if(!FaultTree::test.ftree(DF)) stop("first argument must be a fault tree")
 
 ## test that there are no empty gates, all tree leaves must be basic component events
@@ -39,14 +39,14 @@ ftree2cpp<-function(DF) {
 ##  DF might be the DF object within the scram.cutsets environment
 ## in that event the DFname must be provided
  hold_name<-paste(deparse(substitute(DF)))
-  #if(DFname=="") {
+  if(DFname=="") {
 ## test and fail if hold_name=="DF" while no DFname provided
-    #if(hold_name=="DF"){
-      #stop("must provide DFname as an argument in any do.call function as done in scram.cutsets")
-    #}else{
+    if(hold_name=="DF"){
+      stop("must provide DFname as an argument in any do.call function as done in scram.cutsets")
+    }else{
         DFname<-hold_name
-    #}
-  #}
+    }
+  }
 
 ## must assure that all tags are filled with unique strings
 ## MOE/MOB elements and gates must use source tags 
@@ -71,11 +71,24 @@ if(any(DF$Tag=="")) {
 	}
 }
 
+## As a special condition any DF$MOE>0 represents replication, so
+## setting the DF$Type to 0 here should enable elimination of  these
+## duplicate gates and events from consideration in building the
+## model/fault-tree and basic-element objects in cpp.
+
+for(df_row in 1:dim(DF)[1]) {
+	 if(DF$MOE[df_row]>0) {
+		DF$Type[df_row]=0
+	 }
+}
+
 char_vec<-c(DF$Tag, DFname)
-int_vec<-c(DF$ID, DF$Type, DF$MOE, DF$EType, DF$CParent, DF$UType)
+## DF$MOE eliminated from cpp import
+int_vec<-c(DF$ID, DF$Type, DF$EType, DF$CParent, DF$UType)
 num_vec<-c(DF$CFR, DF$PBF, DF$CRT, DF$P1, DF$P2, DF$UP1, DF$UP2)
 
-outdf<-.Call( "scaffold_test", char_vec, int_vec, num_vec, PACKAGE = "rscram" )
-outdf 
+
+outlist<-list(char_vec, int_vec, num_vec)
+outlist
 
 }
