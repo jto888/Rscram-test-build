@@ -1,0 +1,12 @@
+Package: Rscram
+Title: Compile Testing for SCRAM on R
+Version: 0.1.3
+Date: 2017-8-12
+Author: Olzhas Rakhimov
+Maintainer: Jacob T. Ormerod <jake@openreliability.org>
+Description:  SCRAM is a Command-line Risk Analysis Multi-tool.
+License: GPL (>= 3)
+LazyLoad: yes
+SystemRequirements: C++14
+Imports: Rcpp (>= 0.12.4)
+LinkingTo: Rcpp, RcppArmadillo, BH

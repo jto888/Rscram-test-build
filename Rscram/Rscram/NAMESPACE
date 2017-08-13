@@ -1,0 +1,5 @@
+useDynLib(Rscram)
+
+importFrom(Rcpp, evalCpp)
+
+exportPattern("^[[:alpha:]]+")
