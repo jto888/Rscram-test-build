@@ -30,13 +30,9 @@
 #include <boost/math/special_functions/gamma.hpp>
 #include <boost/range/algorithm_ext/is_sorted.hpp>
 
-//#include "src/error.h"
-//#include "src/ext/algorithm.h"
-//#include "src/random.h"
 #include "error.h"
 #include "ext/algorithm.h"
 #include "random.h"
-
 
 namespace scram {
 namespace mef {

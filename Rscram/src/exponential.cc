@@ -22,7 +22,6 @@
 
 #include <cmath>
 
-//#include "src/error.h"
 #include "error.h"
 
 namespace scram {

@@ -20,7 +20,6 @@
 
 #include "expression/test_event.h"
 
-//#include "src/ext/find_iterator.h"
 #include "ext/find_iterator.h"
 
 namespace scram {
